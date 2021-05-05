@@ -40,7 +40,16 @@ class RegistroController extends Controller
      */
     public function store(Request $request)
     {
-        //
+         //permitira editar y guardar
+         $registro = $request->isMethod('put') ? Registro::findOrFail($request->id) : new Registro;
+         $registro->id = $request->input('id');
+         $registro->nombre = $request->input('nombre');
+         $registro->modelo = $request->input('modelo');
+         $registro->precio = $request->input('precio');
+ 
+         if($registro->save()){
+             return new RegistroResource($registro);
+         }
     }
 
     /**
@@ -51,7 +60,12 @@ class RegistroController extends Controller
      */
     public function show($id)
     {
-        //
+    
+         //obtener categoria por id
+         $registro = Registro::findOrFail($id);
+
+         //retornar datos
+         return new RegistroResource($registro);
     }
 
     /**
@@ -85,6 +99,10 @@ class RegistroController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $registro=Registro::findOrFail($id);
+
+        if($registro->delete()){
+            return new RegistroResource($registro);
+        }
     }
 }
